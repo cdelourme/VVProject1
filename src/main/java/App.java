@@ -12,7 +12,7 @@ public class App {
         launcher.getEnvironment().setAutoImports(true);
         launcher.getEnvironment().setNoClasspath(true);
 
-        File inDir = new File("/home/bob/IdeaProjects/DummyProject/src");
+        File inDir = new File("/home/cedric/IdeaProjects/VVProject1.bis/input/src");
 
         launcher.addInputResource(inDir.getPath());
         launcher.buildModel();
@@ -22,7 +22,7 @@ public class App {
         launcher.process();
 
         //print the transform code
-        File outDir = new File("/home/bob/IdeaProjects/DummyProject/gen");
+        File outDir = new File("/home/cedric/IdeaProjects/VVProject1.bis/input/gen");
         launcher.setSourceOutputDirectory(outDir.getPath());
         launcher.prettyprint();
 
