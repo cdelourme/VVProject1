@@ -3,6 +3,7 @@ package m2.ila.vv;
 import java.util.Random;
 
 public class App {
+
     public void main(String[] args){
         System.out.println("Program for test");
         int i = (new Random()).nextInt();
