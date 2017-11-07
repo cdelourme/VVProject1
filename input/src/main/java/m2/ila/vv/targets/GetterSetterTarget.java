@@ -1,4 +1,4 @@
-package m2.ila.vv.targets;
+/*package m2.ila.vv.targets;
 
 public class GetterSetterTarget {
     public int i;
@@ -17,3 +17,4 @@ public class GetterSetterTarget {
         System.out.println("i: " + i + ", str: " + str + ", internal: " + internal + ", internal2: " + internal2);
     }
 }
+*/

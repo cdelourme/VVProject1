@@ -1,4 +1,4 @@
-package m2.ila.vv.targets;
+/*package m2.ila.vv.targets;
 
 @TransformSingleton
 public class SingletonTarget {
@@ -12,3 +12,4 @@ public class SingletonTarget {
         return instances;
     }
 }
+*/

@@ -1,17 +1,16 @@
 package Processor;
 
+import model.VariableWorkFlow;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtVariableRead;
+import utils.VariableService;
 
 public class VariableReadProcessor extends AbstractProcessor<CtVariableRead> {
     @Override
     public void process(CtVariableRead var) {
-        System.out.println();
-        System.out.println(var.getVariable().getSimpleName());
-        System.out.println(var.getVariable().getDeclaration());
-
-        System.out.println(var.getVariable().getParent());
-        System.out.println(var.getVariable().getParent().getParent());
-        System.out.println(var.getVariable().getType());
+        System.out.println(var.getParent());
+        VariableWorkFlow workFlow = VariableService.instance.getWorkFlow(var.getVariable().getDeclaration().hashCode());
+        System.out.println(workFlow.getVariableAccess());
+        workFlow.getPreviousExpression(var);
     }
 }

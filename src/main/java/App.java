@@ -3,6 +3,7 @@ import Processor.VariableAccessProcessor;
 import Processor.VariableReadProcessor;
 import spoon.Launcher;
 import spoon.reflect.CtModel;
+import utils.VariableService;
 
 import java.io.File;
 
@@ -22,8 +23,11 @@ public class App {
 
         //launcher.addProcessor(new VariableReadProcessor());
         launcher.addProcessor((new VariableAccessProcessor()));
+        //launcher.process();
+        launcher.addProcessor((new VariableReadProcessor()));
         launcher.process();
 
+        //VariableService.instance.toString();
         //print the transform code
         /*File outDir = new File("/home/bob/IdeaProjects/DummyProject/gen");
         launcher.setSourceOutputDirectory(outDir.getPath());
