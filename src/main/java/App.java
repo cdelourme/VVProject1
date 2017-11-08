@@ -1,7 +1,4 @@
-import Processor.ClassProcessor;
-import Processor.LoopProcessor;
-import Processor.VariableAccessProcessor;
-import Processor.VariableReadProcessor;
+import Processor.*;
 import spoon.Launcher;
 import spoon.reflect.CtModel;
 import utils.CyclomaticService;
@@ -19,6 +16,7 @@ public class App {
 
         ///home/bob/IdeaProjects/VVproject1/input/src
         File inDir = new File("/home/bob/IdeaProjects/VVproject1/input/src");
+        //File inDir = new File("/home/cedric/IdeaProjects/VVProject1.bis/input/src");
 
         launcher.addInputResource(inDir.getPath());
         launcher.buildModel();
@@ -28,6 +26,8 @@ public class App {
         //launcher.addProcessor((new VariableAccessProcessor()));
         //launcher.addProcessor((new VariableReadProcessor()));
         launcher.addProcessor((new LoopProcessor()));
+        launcher.addProcessor((new IfProcessor()));
+        launcher.addProcessor((new SwitchProcessor()));
         launcher.process();
 
         CyclomaticService.instance.printResult();
