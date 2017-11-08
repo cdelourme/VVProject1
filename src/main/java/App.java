@@ -2,6 +2,7 @@ import Processor.*;
 import spoon.Launcher;
 import spoon.reflect.CtModel;
 import utils.CyclomaticService;
+import utils.RapportService;
 import utils.VariableService;
 
 import java.io.File;
@@ -33,6 +34,12 @@ public class App {
         launcher.process();
 
         CyclomaticService.instance.printResult();
+        try{
+            new RapportService().cyclomaticRapport(CyclomaticService.instance);
+
+        }catch (Exception ex){
+
+        }
 
         //VariableService.instance.toString();
         //print the transform code
