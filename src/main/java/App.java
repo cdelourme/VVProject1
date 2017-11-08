@@ -26,11 +26,8 @@ public class App {
         //launcher.addProcessor(new VariableReadProcessor());
         //launcher.addProcessor((new VariableAccessProcessor()));
         //launcher.addProcessor((new VariableReadProcessor()));
-        launcher.addProcessor(new LoopProcessor());
-        launcher.addProcessor(new IfProcessor());
-        launcher.addProcessor(new SwitchProcessor());
-        launcher.addProcessor(new ClassProcessor());
         launcher.addProcessor(new MethodProcessor());
+        launcher.addProcessor(new NpeMethodProcessor());
         launcher.process();
 
         CyclomaticService.instance.printResult();

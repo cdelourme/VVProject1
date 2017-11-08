@@ -14,20 +14,14 @@ public class CyclomaticService {
 
 
 
-    private Integer projectCyclomatic = 1;
+    private Integer projectCyclomatic = 0;
     public Integer getProjectCyclomatic() {
         return projectCyclomatic;
-    }
-    public void addProjectCyclomatic() {
-        projectCyclomatic = projectCyclomatic +1;
     }
 
     private HashMap<String,Integer> classCyclomatics = new HashMap<>();
     public HashMap<String,Integer> getClassCyclomatics() {
         return classCyclomatics;
-    }
-    public void setClassCyclomatics(String key, Integer value) {
-        this.classCyclomatics.put(key,value + 1);
     }
 
     private HashMap<String,Integer> methodCyclomatics = new HashMap<>();
@@ -35,7 +29,13 @@ public class CyclomaticService {
         return methodCyclomatics;
     }
     public void setMethodCyclomatics(String keyClass, String keyMethod, Integer value) {
-        this.methodCyclomatics.put(keyClass +"."+keyMethod, value + 1);
+        value+=1;
+        // mise a jour de la cyclomatic du projet
+        this.projectCyclomatic += value;
+        // mise jour de la cyclomatique de la classe
+        this.classCyclomatics.put(keyClass,this.methodCyclomatics.getOrDefault(keyClass,0)+ value);
+        //mise a jour de la cyclomatique de la methode
+        this.methodCyclomatics.put(keyClass +"."+keyMethod, value);
     }
 
     public void printResult(){

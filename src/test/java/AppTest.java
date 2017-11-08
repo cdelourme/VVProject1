@@ -27,10 +27,6 @@ public class AppTest extends TestCase{
         launcher.buildModel();
         CtModel root = launcher.getModel();
 
-        launcher.addProcessor(new LoopProcessor());
-        launcher.addProcessor(new IfProcessor());
-        launcher.addProcessor(new SwitchProcessor());
-        launcher.addProcessor(new ClassProcessor());
         launcher.addProcessor(new MethodProcessor());
         launcher.process();
 
