@@ -1,4 +1,5 @@
 import Processor.ClassProcessor;
+import Processor.LoopProcessor;
 import Processor.VariableAccessProcessor;
 import Processor.VariableReadProcessor;
 import spoon.Launcher;
@@ -15,7 +16,7 @@ public class App {
         launcher.getEnvironment().setAutoImports(true);
         launcher.getEnvironment().setNoClasspath(true);
 
-        File inDir = new File("/home/bob/IdeaProjects/VVproject1/input/src");
+        File inDir = new File("/home/cedric/IdeaProjects/VVproject1.bis/input/src");
 
         launcher.addInputResource(inDir.getPath());
         launcher.buildModel();
@@ -25,6 +26,7 @@ public class App {
         launcher.addProcessor((new VariableAccessProcessor()));
         //launcher.process();
         launcher.addProcessor((new VariableReadProcessor()));
+        launcher.addProcessor((new LoopProcessor()));
         launcher.process();
 
         //VariableService.instance.toString();
