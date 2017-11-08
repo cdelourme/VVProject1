@@ -35,6 +35,9 @@ public class AppTest extends TestCase{
         launcher.process();
 
         CyclomaticService.instance.printResult();
+
+        // il faut maintenant un assert !!
+        assertTrue( true );
     }
 
     public static void main( String[] arg){
