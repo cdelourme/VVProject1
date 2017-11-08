@@ -35,18 +35,18 @@ public class CyclomaticService {
         return methodCyclomatics;
     }
     public void setMethodCyclomatics(String keyClass, String keyMethod, Integer value) {
-        this.methodCyclomatics.put(keyClass +"-"+keyMethod, value + 1);
+        this.methodCyclomatics.put(keyClass +"."+keyMethod, value + 1);
     }
 
     public void printResult(){
         System.out.println("Cyclomatic du projet : "+this.projectCyclomatic);
         System.out.println("Cyclomatic des classes : ");
         this.classCyclomatics.forEach((key,value)->{
-            System.out.println(key+" : "+value);
+            System.out.println("    "+key+" : "+value);
         });
         System.out.println("Cyclomatic des methodes : ");
         this.methodCyclomatics.forEach((key,value)->{
-            System.out.println(key+" : "+value);
+            System.out.println("    "+key+" : "+value);
         });
     }
 
