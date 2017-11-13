@@ -19,4 +19,8 @@ public class App {
         int x = str.length();//Possible NPE
 
     }
+
+    public void test(){
+        if(true);
+    }
 }
