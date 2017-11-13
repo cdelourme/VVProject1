@@ -50,7 +50,11 @@ public class CyclomaticService {
         });
     }
 
-
+    public void resetStats(){
+        this.methodCyclomatics = new HashMap<>();
+        this.classCyclomatics = new HashMap<>();
+        this.projectCyclomatic = 1;
+    }
 
 
 }

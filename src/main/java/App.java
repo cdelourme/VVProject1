@@ -16,8 +16,8 @@ public class App {
         launcher.getEnvironment().setNoClasspath(true);
 
         ///home/bob/IdeaProjects/VVproject1/input/src
-        File inDir = new File("/home/bob/IdeaProjects/VVproject1/input/src");
-        //File inDir = new File("/home/cedric/IdeaProjects/VVProject1.bis/input/src");
+        //File inDir = new File("/home/bob/IdeaProjects/VVproject1/input/src");
+        File inDir = new File("/home/cedric/IdeaProjects/VVProject1.bis/input/src");
 
         launcher.addInputResource(inDir.getPath());
         launcher.buildModel();
