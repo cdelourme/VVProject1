@@ -11,6 +11,6 @@ public class VariableReadProcessor extends AbstractProcessor<CtVariableRead> {
         System.out.println(var.getParent());
         VariableWorkFlow workFlow = VariableService.instance.getWorkFlow(var.getVariable().getDeclaration().hashCode());
         System.out.println(workFlow.getVariableAccess());
-        workFlow.getPreviousExpression(var);
+        //workFlow.getPreviousExpression(var);
     }
 }

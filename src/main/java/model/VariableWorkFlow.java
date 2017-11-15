@@ -1,5 +1,6 @@
 package model;
 
+import javafx.util.Pair;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.declaration.CtElement;
@@ -13,9 +14,9 @@ public class VariableWorkFlow {
     }
 
     private CtElement declaration;
-    private LinkedList<CtExpression> variableAccess;
+    private LinkedList<Pair<CtExpression,Boolean>> variableAccess;
 
-    public LinkedList<CtExpression> getVariableAccess() {
+    public LinkedList<Pair<CtExpression,Boolean>> getVariableAccess() {
         return variableAccess;
     }
 
@@ -24,15 +25,35 @@ public class VariableWorkFlow {
         variableAccess = new LinkedList<>();
     }
 
-    public void addExp(CtExpression elem){
-        variableAccess.add(elem);
+    public void addExp(CtExpression elem, Boolean isWrite){
+        variableAccess.add(new Pair(elem,isWrite));
     }
 
-    public CtExpression getPreviousExpression(CtVariableRead var) {
+    public CtExpression getPreviousWriteExpression(CtVariableRead var) {
         CtExpression exp = var.getParent(CtExpression.class);
-        System.out.println(variableAccess);
         System.out.println(exp);
-        if(variableAccess.contains(exp)){
+        variableAccess.forEach(p->{
+            if(p.getKey()==exp){
+                int index = variableAccess.indexOf(p);
+                if(index==0){
+                    System.out.println(declaration);
+                }
+                else{
+                    int indexbis = index;
+                    while(indexbis>0){
+                        if(variableAccess.get(indexbis).getValue()){
+                            System.out.println(variableAccess.get(indexbis).getKey());
+                            return;
+                        }else{
+                            indexbis = indexbis-1;
+                        }
+                    }
+                    System.out.println(declaration);
+
+                }
+            }
+        });
+        /*if(variableAccess.contains(exp)){
             System.out.println("contains");
             int index = variableAccess.indexOf(exp);
 
@@ -42,7 +63,7 @@ public class VariableWorkFlow {
             else{
                 System.out.println(variableAccess.get(index-1));
             }
-        }
+        }*/
         return null;
     }
 

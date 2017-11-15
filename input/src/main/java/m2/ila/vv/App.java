@@ -7,6 +7,7 @@ public class App {
     public void main(String[] args){
 
         int i = new Random().nextInt();
+
         String str = null;
         if( i > 100 )
             str = "fou";
@@ -15,6 +16,9 @@ public class App {
 
         while(i==10){
             i=10;
+        }
+        if(str!=null){
+            int y = str.length();
         }
         int x = str.length();//Possible NPE
 

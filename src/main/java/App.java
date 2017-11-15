@@ -27,7 +27,7 @@ public class App {
         launcher.addProcessor(new NpeMethodProcessor());
         launcher.process();
 
-        CyclomaticService.instance.printResult();
+        /*CyclomaticService.instance.printResult();*/
         try{
             new RapportService().cyclomaticRapport(CyclomaticService.instance);
 
