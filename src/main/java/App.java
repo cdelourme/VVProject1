@@ -23,10 +23,7 @@ public class App {
         launcher.buildModel();
         CtModel root = launcher.getModel();
 
-        //launcher.addProcessor(new VariableReadProcessor());
-        //launcher.addProcessor((new VariableAccessProcessor()));
-        //launcher.addProcessor((new VariableReadProcessor()));
-        launcher.addProcessor(new MethodProcessor());
+//        launcher.addProcessor(new MethodProcessor());
         launcher.addProcessor(new NpeMethodProcessor());
         launcher.process();
 
