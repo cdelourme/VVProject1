@@ -27,4 +27,16 @@ public class App {
     public void test(){
         if(true);
     }
+
+    public int returnInt(){
+        int i = new Random().nextInt();
+
+        String str = null;
+        if( i > 100 )
+            str = "fou";
+        else
+            str = null;
+
+        return str.length();
+    }
 }

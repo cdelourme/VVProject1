@@ -53,17 +53,6 @@ public class VariableWorkFlow {
                 }
             }
         });
-        /*if(variableAccess.contains(exp)){
-            System.out.println("contains");
-            int index = variableAccess.indexOf(exp);
-
-            if(index==0){
-                System.out.println(declaration);
-            }
-            else{
-                System.out.println(variableAccess.get(index-1));
-            }
-        }*/
         return null;
     }
 

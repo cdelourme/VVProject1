@@ -1,19 +1,14 @@
 package Processor;
 
-import javafx.util.Pair;
 import model.VariableWorkFlow;
 import spoon.processing.AbstractProcessor;
-import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtVariableAccess;
 import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.code.CtVariableWrite;
-import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtVariable;
 import spoon.reflect.visitor.filter.TypeFilter;
 import utils.VariableService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NpeMethodProcessor extends AbstractProcessor<CtMethod> {
@@ -25,23 +20,14 @@ public class NpeMethodProcessor extends AbstractProcessor<CtMethod> {
         //Si oui lors de lecture regarder la dernière affectation
         // ou si un test est fait avant
 
-        /*List<CtVariable> declarVar = ctMethod.getElements(new TypeFilter<>(CtVariable.class));
-        declarVar.forEach( a -> {
-            System.out.println(a.getReference());
-            System.out.println(a.getDefaultExpression());
-        });*/
-
         List<CtVariableAccess> accessVars = ctMethod.getElements(new TypeFilter<>(CtVariableAccess.class));
         List<CtVariableWrite> writeVars = ctMethod.getElements(new TypeFilter<>(CtVariableWrite.class));
 
         if(accessVars.size() != 0 && writeVars.size() != 0){
-            //System.out.println(accessVars);
-            //System.out.println(writeVars);
 
-            accessVars.forEach(p-> {
-                VariableService.instance.addVariableAccess(p,writeVars.contains(p));
-            });
-
+            accessVars.forEach(p->
+                VariableService.instance.addVariableAccess(p,writeVars.contains(p))
+            );
 
             List<CtVariableRead> readVars = ctMethod.getElements(new TypeFilter<>(CtVariableRead.class));
 

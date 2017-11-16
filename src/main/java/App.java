@@ -17,14 +17,15 @@ public class App {
 
         ///home/bob/IdeaProjects/VVproject1/input/src
         //File inDir = new File("/home/bob/IdeaProjects/VVproject1/input/src");
-        File inDir = new File("/home/cedric/IdeaProjects/VVProject1.bis/input/src");
+        File inDir = new File("/home/bob/IdeaProjects/VVproject1/input/src");
 
         launcher.addInputResource(inDir.getPath());
         launcher.buildModel();
         CtModel root = launcher.getModel();
 
 //        launcher.addProcessor(new MethodProcessor());
-        launcher.addProcessor(new NpeMethodProcessor());
+        //launcher.addProcessor(new NpeMethodProcessor());
+        launcher.addProcessor(new ReturnStatementMethodProcessor());
         launcher.process();
 
         /*CyclomaticService.instance.printResult();*/
