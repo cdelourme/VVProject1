@@ -6,6 +6,8 @@ import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.declaration.CtElement;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VariableWorkFlow {
 
@@ -14,9 +16,9 @@ public class VariableWorkFlow {
     }
 
     private CtElement declaration;
-    private LinkedList<Pair<CtExpression,Boolean>> variableAccess;
+    private LinkedList<Element> variableAccess;
 
-    public LinkedList<Pair<CtExpression,Boolean>> getVariableAccess() {
+    public LinkedList<Element> getVariableAccess() {
         return variableAccess;
     }
 
@@ -26,14 +28,25 @@ public class VariableWorkFlow {
     }
 
     public void addExp(CtExpression elem, Boolean isWrite){
-        variableAccess.add(new Pair(elem,isWrite));
+        variableAccess.add(new SimpleElement(elem,isWrite));
     }
 
     public CtExpression getPreviousWriteExpression(CtVariableRead var) {
         CtExpression exp = var.getParent(CtExpression.class);
         System.out.println(exp);
-        variableAccess.forEach(p->{
-            if(p.getKey()==exp){
+        Element readvar = variableAccess.stream().filter(p->p.getExp()==exp).findFirst().get();
+        List<Element> beforeWriteExps = variableAccess.subList(0,variableAccess.indexOf(readvar))
+                .stream().filter(p->p.isWrite()).collect(Collectors.toList());
+        if(beforeWriteExps.size()==0){
+            System.out.println(declaration);
+        }
+        else
+        {
+            int index = variableAccess.indexOf(beforeWriteExps.get(beforeWriteExps.size()-1));
+            System.out.println(variableAccess.get(index).getExp());
+        }
+        /*variableAccess.forEach(p->{
+            if(p.getExp()==exp){
                 int index = variableAccess.indexOf(p);
                 if(index==0){
                     System.out.println(declaration);
@@ -41,8 +54,8 @@ public class VariableWorkFlow {
                 else{
                     int indexbis = index;
                     while(indexbis>0){
-                        if(variableAccess.get(indexbis).getValue()){
-                            System.out.println(variableAccess.get(indexbis).getKey());
+                        if(variableAccess.get(indexbis).isWrite()){
+                            System.out.println(variableAccess.get(indexbis).getExp());
                             return;
                         }else{
                             indexbis = indexbis-1;
@@ -52,7 +65,7 @@ public class VariableWorkFlow {
 
                 }
             }
-        });
+        });*/
         return null;
     }
 

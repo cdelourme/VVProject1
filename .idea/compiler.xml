@@ -12,6 +12,7 @@
     <bytecodeTargetLevel target="1.8">
       <module name="input" target="1.8" />
       <module name="project" target="1.8" />
+      <module name="VV-project1" target="1.8" />
       <module name="VVProject1" target="1.8" />
       <module name="VVProject1.bis" target="1.8" />
     </bytecodeTargetLevel>

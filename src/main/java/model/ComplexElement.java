@@ -6,7 +6,6 @@ import spoon.reflect.declaration.CtElement;
 import java.util.List;
 
 public class ComplexElement extends Element {
-    private CtElement element;
-    private List<CtExpression> expression;
+    public ComplexElement(CtExpression elem, boolean isWrite){super(elem,isWrite);}
 
 }

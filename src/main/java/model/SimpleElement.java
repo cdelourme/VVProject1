@@ -3,5 +3,8 @@ package model;
 import spoon.reflect.code.CtExpression;
 
 public class SimpleElement extends Element {
-    private CtExpression element;
+
+    public SimpleElement(CtExpression elem, boolean isWrite){
+        super(elem,isWrite);
+    }
 }

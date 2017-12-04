@@ -33,7 +33,7 @@ public class CyclomaticService {
         // mise a jour de la cyclomatic du projet
         this.projectCyclomatic += value;
         // mise jour de la cyclomatique de la classe
-        this.classCyclomatics.put(keyClass,this.methodCyclomatics.getOrDefault(keyClass,0)+ value);
+        this.classCyclomatics.put(keyClass,this.classCyclomatics.getOrDefault(keyClass,0)+ value);
         //mise a jour de la cyclomatique de la methode
         this.methodCyclomatics.put(keyClass +"."+keyMethod, value);
     }

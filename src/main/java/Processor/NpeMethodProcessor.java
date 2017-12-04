@@ -15,25 +15,25 @@ public class NpeMethodProcessor extends AbstractProcessor<CtMethod> {
 
     @Override
     public void process(CtMethod ctMethod) {
-        //Faire un travail a l'échelle d'un methode avant de la faire a l'echelle d'un programme.
-        //première étape regarger si la variable peut être a un moment donné déclarée a null.
-        //Si oui lors de lecture regarder la dernière affectation
-        // ou si un test est fait avant
 
+        //Recupération des acces au variable en acces (ecriture& lecture.
+        //Recupération des acces au variable en ecriture.
         List<CtVariableAccess> accessVars = ctMethod.getElements(new TypeFilter<>(CtVariableAccess.class));
         List<CtVariableWrite> writeVars = ctMethod.getElements(new TypeFilter<>(CtVariableWrite.class));
 
         if(accessVars.size() != 0 && writeVars.size() != 0){
+            //Construction de l'arborescence des acces au variable.
 
-            accessVars.forEach(p->
-                VariableService.instance.addVariableAccess(p,writeVars.contains(p))
-            );
+            accessVars.forEach(p-> VariableService.instance.addVariableAccess(p,writeVars.contains(p)) );
+            //writeVars.forEach(p-> VariableService.instance.addWriteVariableAccess(p,true) );
 
+            //recherche d'éventuelle NPE
             List<CtVariableRead> readVars = ctMethod.getElements(new TypeFilter<>(CtVariableRead.class));
-
             readVars.forEach(p->{
-                VariableWorkFlow workFlow = VariableService.instance.getWorkFlow(p.getVariable().getDeclaration().hashCode());
-                workFlow.getPreviousWriteExpression(p);
+                if(p.getVariable().getDeclaration()!=null) { //évite les variable Sys
+                    VariableWorkFlow workFlow = VariableService.instance.getWorkFlow(p.getVariable().getDeclaration().hashCode());
+                    workFlow.getPreviousWriteExpression(p);
+                }
             });
         }
 

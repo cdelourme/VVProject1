@@ -16,16 +16,16 @@ public class App {
         launcher.getEnvironment().setNoClasspath(true);
 
         ///home/bob/IdeaProjects/VVproject1/input/src
-        //File inDir = new File("/home/bob/IdeaProjects/VVproject1/input/src");
-        File inDir = new File("/home/bob/IdeaProjects/VVproject1/input/src");
+        //File inDir = new File("/Documents/Source/IdeaProject/VVProject/input/src");
+        File inDir = new File("/home/bob/Documents/Source/IdeaProject/VVProject/input/src");
 
         launcher.addInputResource(inDir.getPath());
         launcher.buildModel();
         CtModel root = launcher.getModel();
 
-//        launcher.addProcessor(new MethodProcessor());
+        //launcher.addProcessor(new MethodProcessor());
         //launcher.addProcessor(new NpeMethodProcessor());
-        launcher.addProcessor(new ReturnStatementMethodProcessor());
+        launcher.addProcessor(new NpeMethodProcessor());
         launcher.process();
 
         /*CyclomaticService.instance.printResult();*/
