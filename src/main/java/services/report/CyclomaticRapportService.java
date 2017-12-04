@@ -1,10 +1,12 @@
-package utils;
+package services.report;
+
+import services.fonctionnel.CyclomaticService;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-public class RapportService {
+public class CyclomaticRapportService {
 
 
     public void cyclomaticRapport(CyclomaticService cycloServ) throws FileNotFoundException, UnsupportedEncodingException {

@@ -7,10 +7,13 @@ import spoon.reflect.code.CtSwitch;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.visitor.filter.TypeFilter;
-import utils.CyclomaticService;
+import services.fonctionnel.CyclomaticService;
 
 import java.util.List;
 
+/**
+ * Processor use for cyclomatic research
+ */
 public class MethodProcessor extends AbstractProcessor<CtMethod> {
 
     @Override

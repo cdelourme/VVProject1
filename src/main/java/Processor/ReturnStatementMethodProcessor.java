@@ -1,10 +1,12 @@
 package Processor;
 
+import services.fonctionnel.ReturnStatementService;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtReturn;
 import spoon.reflect.code.CtVariableAccess;
 import spoon.reflect.code.CtVariableRead;
+import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.visitor.chain.CtQuery;
 import spoon.reflect.visitor.filter.TypeFilter;
@@ -15,12 +17,9 @@ public class ReturnStatementMethodProcessor extends AbstractProcessor<CtMethod> 
     @Override
     public void process(CtMethod ctMethod) {
         //System.out.println(ctMethod);
-        CtQuery returnStatement = ctMethod.getBody().filterChildren(new TypeFilter<>(CtReturn.class));
-        returnStatement.forEach((CtReturnImpl p) -> {
-            System.out.println(p);
-            CtExpression returnExp = p.getReturnedExpression();
+        String name = ctMethod.getSimpleName();
+        String className = ctMethod.getParent(new TypeFilter<>(CtClass.class)).getQualifiedName();
+        ReturnStatementService.instance.setReturnStatement(className,name,ctMethod.getBody());
 
-            System.out.println(returnExp.getElements(new TypeFilter<>(CtVariableRead.class)));
-        });
     }
 }

@@ -1,9 +1,8 @@
 import Processor.*;
 import spoon.Launcher;
 import spoon.reflect.CtModel;
-import utils.CyclomaticService;
-import utils.RapportService;
-import utils.VariableService;
+import services.fonctionnel.CyclomaticService;
+import services.report.CyclomaticRapportService;
 
 import java.io.File;
 
@@ -24,19 +23,18 @@ public class App {
         CtModel root = launcher.getModel();
 
         //launcher.addProcessor(new MethodProcessor());
-        //launcher.addProcessor(new NpeMethodProcessor());
         launcher.addProcessor(new NpeMethodProcessor());
         launcher.process();
 
         /*CyclomaticService.instance.printResult();*/
         try{
-            new RapportService().cyclomaticRapport(CyclomaticService.instance);
+            new CyclomaticRapportService().cyclomaticRapport(CyclomaticService.instance);
 
         }catch (Exception ex){
 
         }
 
-        //VariableService.instance.toString();
+        //NPEService.instance.toString();
         //print the transform code
         /*File outDir = new File("/home/bob/IdeaProjects/DummyProject/gen");
         launcher.setSourceOutputDirectory(outDir.getPath());

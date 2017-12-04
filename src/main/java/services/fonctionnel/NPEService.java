@@ -1,15 +1,13 @@
-package utils;
+package services.fonctionnel;
 
 import model.VariableWorkFlow;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtVariableAccess;
-import spoon.reflect.code.CtVariableRead;
-import spoon.reflect.code.CtVariableWrite;
 
 import java.util.HashMap;
 
-public class VariableService {
-     public static VariableService instance = new VariableService();
+public class NPEService {
+     public static NPEService instance = new NPEService();
 
      private HashMap<Integer, VariableWorkFlow> varAccess = new HashMap<>();
 
@@ -37,13 +35,16 @@ public class VariableService {
      public void addVariableAccess(CtVariableAccess varAcc, boolean isWrite){
           Integer index =addVariableAccess(varAcc);
           if(index!=null){
-               varAccess.get(addVariableAccess(varAcc)).addExp(varAcc.getParent(CtExpression.class),isWrite);
+               if(varAcc.getParent(CtExpression.class)==null){
+                    varAccess.get(addVariableAccess(varAcc)).addExp(varAcc,isWrite);
+
+               }else{
+                    varAccess.get(addVariableAccess(varAcc)).addExp(varAcc.getParent(CtExpression.class),isWrite);
+
+               }
           }
      }
 
-     private VariableService() {
-
-     }
 
      public VariableWorkFlow getWorkFlow(int hash){
           return this.varAccess.get(hash);
