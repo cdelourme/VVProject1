@@ -1,8 +1,13 @@
 package services.fonctionnel;
 
+import model.Element;
 import model.VariableWorkFlow;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtVariableAccess;
+import spoon.reflect.code.CtVariableRead;
+import spoon.reflect.declaration.CtElement;
+import spoon.reflect.declaration.CtVariable;
+import spoon.reflect.visitor.filter.VariableAccessFilter;
 
 import java.util.HashMap;
 
@@ -16,16 +21,18 @@ public class NPEService {
       * @param varAcc
       * @return
       */
-     private Integer addVariableAccess(CtVariableAccess varAcc){
+     private VariableWorkFlow getWorkFlow(CtVariableAccess varAcc){
           if(varAcc.getVariable().getDeclaration()==null){
                return null;
           }
+
           int hashCode = varAcc.getVariable().getDeclaration().hashCode();
-          if(!varAccess.containsKey(hashCode)){
-               varAccess.put(hashCode ,
-                       new VariableWorkFlow(varAcc.getVariable().getDeclaration()));
+          VariableWorkFlow returnVal = varAccess.getOrDefault(hashCode, null);
+          if(returnVal == null ){
+               returnVal = new VariableWorkFlow(varAcc.getVariable().getDeclaration());
+               varAccess.put(hashCode, returnVal);
           }
-          return hashCode;
+          return returnVal;
      }
 
      /**
@@ -33,21 +40,24 @@ public class NPEService {
       * @param varAcc
       */
      public void addVariableAccess(CtVariableAccess varAcc, boolean isWrite){
-          Integer index =addVariableAccess(varAcc);
-          if(index!=null){
-               if(varAcc.getParent(CtExpression.class)==null){
-                    varAccess.get(addVariableAccess(varAcc)).addExp(varAcc,isWrite);
-
-               }else{
-                    varAccess.get(addVariableAccess(varAcc)).addExp(varAcc.getParent(CtExpression.class),isWrite);
-
-               }
+          VariableWorkFlow workFlow = getWorkFlow(varAcc);
+          if(workFlow!=null){
+               workFlow.addExp(SpoonService.getParentExpression(varAcc),isWrite);
           }
      }
 
+     public Boolean throwNPE(CtVariableRead readVar){
+          System.out.println("\tPour : "+ readVar);
+          VariableWorkFlow workFlow = getWorkFlow(readVar);
+          if(workFlow!=null){
+               Element previousExp = workFlow.getPreviousWriteExpression(SpoonService.getParentExpression(readVar));
+               if(previousExp!= null){
+                    System.out.println("\tla dernière écriture est : "+ previousExp.getElem());
+                    previousExp.throwNPE();
+               }
 
-     public VariableWorkFlow getWorkFlow(int hash){
-          return this.varAccess.get(hash);
+          }
+          return false;
      }
 
 }

@@ -1,6 +1,7 @@
 package Processor;
 
 import model.VariableWorkFlow;
+import services.fonctionnel.SpoonService;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtVariableAccess;
@@ -27,21 +28,24 @@ public class NpeMethodProcessor extends AbstractProcessor<CtMethod> {
 
         if(accessVars.size() != 0 && writeVars.size() != 0){
             //Construction de l'arborescence des acces au variable.
+            accessVars.forEach(p->{
 
-            accessVars.forEach(p-> NPEService.instance.addVariableAccess(p,writeVars.contains(p)) );
+                    NPEService.instance.addVariableAccess(p,writeVars.contains(p));
+            } );
             //writeVars.forEach(p-> NPEService.instance.addWriteVariableAccess(p,true) );
 
             //recherche d'éventuelle NPE
             List<CtVariableRead> readVars = ctMethod.getElements(new TypeFilter<>(CtVariableRead.class));
             System.out.println("In "+ctMethod.getSimpleName());
             readVars.forEach(p->{
-                if(p.getVariable().getDeclaration()!=null) { //évite les variable Sys
+                NPEService.instance.throwNPE(p);
+                /*if(p.getVariable().getDeclaration()!=null) { //évite les variable Sys
                     VariableWorkFlow workFlow = NPEService.instance.getWorkFlow(p.getVariable().getDeclaration().hashCode());
                     workFlow.getPreviousWriteExpression(p);
                     System.out.println("\tfor :" + (p.getParent(CtExpression.class) != null ? p.getParent(CtExpression.class) : p));
                     System.out.println("\tlast write is : " + workFlow.getPreviousWriteExpression(p));
                     System.out.println();
-                }
+                }*/
             });
             System.out.println();
         }

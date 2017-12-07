@@ -1,30 +1,21 @@
 package model;
 
 import spoon.reflect.code.CtExpression;
+import spoon.reflect.declaration.CtElement;
 
 public abstract class Element {
 
-    private CtExpression exp;
-    public CtExpression getExp() { return exp; }
+    public abstract boolean contains(CtExpression exp);
+    public abstract CtElement getElem();
+    public abstract boolean isWrite();
+    public abstract boolean isComplex();
 
-    private boolean isComplex;
-    public boolean isComplex() {
-        return isComplex;
-    }
-
-    private boolean isWrite;
-    public boolean isWrite() {
-        return isWrite;
-    }
-
-
-
-    public Element(CtExpression exp, boolean isWrite){
-        this.exp = exp;
-        this.isWrite = isWrite;
-    }
-
-
-
-
+    /**
+     * Method which declare if Element throw an NPE
+     * @return
+     * true -> throw NPE.
+     * false -> no throw NPE.
+     * null -> go see up.
+     */
+    public abstract Boolean throwNPE();
 }
