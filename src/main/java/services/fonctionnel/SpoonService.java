@@ -15,6 +15,10 @@ public class SpoonService {
         }
     }
 
+    public static CtVariableAccess getVarAccess(CtExpression exp){
+        return exp.filterChildren(new TypeFilter<>(CtVariableAccess.class)).first(CtVariableAccess.class);
+    }
+
     /*public static CtExpression getParentExpression(CtVariable var ){
         if(var.getParent(new TypeFilter<>(CtExpression.class))!= null){
             return var.getParent(new TypeFilter<>(CtExpression.class));

@@ -22,9 +22,10 @@ public class App {
         launcher.buildModel();
         CtModel root = launcher.getModel();
 
-        //launcher.addProcessor(new MethodProcessor());
+        //launcher.addProcessor(new CyclomaticProcessor());
         //launcher.addProcessor(new NpeMethodProcessor());
-        launcher.addProcessor(new TestProcessor());
+        //launcher.addProcessor(new TestProcessor());
+        launcher.addProcessor(new NewNpeProcessor());
         launcher.process();
 
         /*CyclomaticService.instance.printResult();*/

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Processor use for cyclomatic research
  */
-public class MethodProcessor extends AbstractProcessor<CtMethod> {
+public class CyclomaticProcessor extends AbstractProcessor<CtMethod> {
 
     @Override
     public void process(CtMethod ctMethod) {
