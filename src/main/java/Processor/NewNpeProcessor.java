@@ -1,5 +1,6 @@
 package Processor;
 
+import newModel.VariableWorkFlow;
 import services.fonctionnel.SpoonService;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtExpression;
@@ -17,8 +18,13 @@ public class NewNpeProcessor extends AbstractProcessor<CtMethod> {
     public void process(CtMethod ctMethod) {
         NPEService.instance.addMethod(ctMethod.getSignature(), ctMethod);
         List<CtVariableAccess> accessVars = ctMethod.getElements(new TypeFilter<>(CtVariableAccess.class));
-        List<CtExpression> exp = accessVars.stream().map(p-> SpoonService.getParentExpression(p)).collect(Collectors.toList());
+        //Suppression des variables sans déclaration
+        accessVars = accessVars.stream().filter(p->p.getVariable().getDeclaration()!=null).collect(Collectors.toList());
 
-        exp.forEach(p->NPEService.instance.addExpression(ctMethod.getSignature(), p));
+        accessVars.forEach(p->NPEService.instance.addExpression(ctMethod.getSignature(), p));
+        accessVars.forEach(p->{
+            VariableWorkFlow workFlow = NPEService.instance.getVariableWorkFlow(ctMethod.getSignature(),p);
+            System.out.println(workFlow);
+        } );
     }
 }

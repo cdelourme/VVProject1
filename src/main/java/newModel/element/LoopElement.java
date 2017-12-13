@@ -3,10 +3,8 @@ package newModel.element;
 import model.Expression;
 import newModel.VariableWorkFlow;
 import newModel.variableAccess.ExpressionElement;
-import spoon.reflect.code.CtBlock;
-import spoon.reflect.code.CtExpression;
-import spoon.reflect.code.CtLoop;
-import spoon.reflect.code.CtWhile;
+import services.fonctionnel.SpoonService;
+import spoon.reflect.code.*;
 import spoon.reflect.cu.SourcePosition;
 
 public class LoopElement extends AElement {
@@ -24,22 +22,26 @@ public class LoopElement extends AElement {
         }
     }
 
-    public void addExpression(VariableWorkFlow workFlow, CtExpression exp) {
+    public void addExpression(VariableWorkFlow workFlow, CtVariableAccess varAcc) {
+        CtExpression exp = SpoonService.getParentExpression(varAcc);
+
         if (refCond != null && refCond.equals(exp)) {
             this.condition = new ExpressionElement(this,exp);
             workFlow.addExpression(condition);
         } else {
             if (body.bodyContains(exp)) {
-                this.body.addExpression(exp);
+                this.body.addExpression(varAcc);
             } else {
                 System.out.println("an error occured");
             }
         }
     }
 
-    public void addExpression(CtExpression exp) {
+    public void addExpression(CtVariableAccess varAcc) {
+        CtExpression exp = SpoonService.getParentExpression(varAcc);
+
         if (body.bodyContains(exp)) {
-            this.body.addExpression(exp);
+            this.body.addExpression(varAcc);
         } else {
             System.out.println("an error occured");
         }
@@ -49,5 +51,9 @@ public class LoopElement extends AElement {
         return refCond == exp || body.bodyContains(exp);
     }
 
+
+    public VariableWorkFlow getWorkFlow(CtVariableAccess varAcc){
+        return body.getWorkFlow(varAcc);
+    }
 
 }

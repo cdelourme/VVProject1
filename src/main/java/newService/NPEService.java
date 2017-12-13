@@ -32,27 +32,32 @@ public class NPEService {
         this.methods.put(name,methodBlock);
     }
 
-    public void addExpression(String methodName, CtExpression exp){
+    public void addExpression(String methodName, CtVariableAccess varAcc){
         BlockElement method = methods.get(methodName);
 
         //Gestion des variable de class
-        if(method.includeDeclaration(exp)){
-            method.addExpression(exp);
+        if(method.includeDeclaration(varAcc)){
+            method.addExpression(varAcc);
         }
         else
         {
-            CtVariable var =  SpoonService.getVarAccess(exp).getVariable().getDeclaration();
+            CtVariable var =  varAcc.getVariable().getDeclaration();
             if(var != null){
                 VariableWorkFlow workFlow = new VariableWorkFlow(null,var);
                 this.globalVars.add(workFlow);
-                method.addExpression(workFlow,exp);
+                method.addExpression(workFlow,varAcc);
             }
         }
     }
 
-    /*public VariableWorkFlow getVariableWorkFlow(String methodName, CtVariableAccess varAcc){
-        //faire une recherche de work flow en local
-        //recherche dans la methode qui entraine une récursive
-    }*/
+    public VariableWorkFlow getVariableWorkFlow(String methodName, CtVariableAccess varAcc){
+        if(globalVars.stream().anyMatch(p->p.as(varAcc))){
+            System.out.println("Variable de class non implémenté");
+            return null;
+        }
+        else{
+            return methods.get(methodName).getWorkFlow(varAcc);
+        }
+    }
 
 }

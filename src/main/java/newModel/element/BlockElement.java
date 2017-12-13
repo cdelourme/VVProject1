@@ -42,31 +42,32 @@ public class BlockElement extends AElement {
      * Recherche si la déclaration de la variable appartient au block
      * Si oui créer le worflow et ajoute la variable
      * Sinon ne fait rien
-     * @param exp
+     * @param varAcc
      */
-    public void addExpression(CtExpression exp){
-        if(includeDeclaration(exp)) {
-            VariableWorkFlow workFlow = getWorkFlowOf(exp);
-            this.addExpression(workFlow,exp);
+    public void addExpression(CtVariableAccess varAcc){
+        if(includeDeclaration(varAcc)) {
+            VariableWorkFlow workFlow = getWorkFlowOf(varAcc);
+            this.addExpression(workFlow,varAcc);
         }
         else
         {
-            this.childrenIElems.stream().filter(p->p.bodyContains(exp)).forEach(p->p.addExpression(exp));
+            this.childrenIElems.stream().filter(p->p.bodyContains(SpoonService.getParentExpression(varAcc))).forEach(p->p.addExpression(varAcc));
         }
     }
 
     /**
      * Ajout la variable si elle lui appartient sinon propage au enfant ou ne fait rien.
      * @param workFlow
-     * @param exp
+     * @param varAcc
      */
-    public void addExpression(VariableWorkFlow workFlow, CtExpression exp){
+    public void addExpression(VariableWorkFlow workFlow, CtVariableAccess varAcc){
+        CtExpression exp = SpoonService.getParentExpression(varAcc);
         if(hasParent(exp)){
             workFlow.addExpression(new ExpressionElement(this,exp));
         }
         else
         {
-            this.childrenIElems.stream().filter(p->p.bodyContains(exp)).forEach(p->p.addExpression(workFlow, exp));
+            this.childrenIElems.stream().filter(p->p.bodyContains(exp)).forEach(p->p.addExpression(workFlow, varAcc));
         }
 
     }
@@ -80,11 +81,10 @@ public class BlockElement extends AElement {
      * Methode donnant le workflow d'une variable du block
      * s'il existe le retourne
      * sinon le crée et le retourne
-     * @param exp
+     * @param varAcc
      * @return
      */
-    public VariableWorkFlow getWorkFlowOf(CtExpression exp){
-        CtVariableAccess varAcc = SpoonService.getVarAccess(exp);
+    private VariableWorkFlow getWorkFlowOf(CtVariableAccess varAcc){
         if(workFlows.stream().anyMatch(p->p.as(varAcc))){
             return workFlows.stream().filter(p->p.as(varAcc)).findFirst().get();
         }
@@ -95,30 +95,28 @@ public class BlockElement extends AElement {
         }
     }
 
+    public VariableWorkFlow getWorkFlow(CtVariableAccess varAcc){
+        if(workFlows.stream().anyMatch(p->p.as(varAcc))){
+            return workFlows.stream().filter(p->p.as(varAcc)).findFirst().get();
+        }
+        else {
+            return this.childrenIElems.stream()
+                    .filter(p->p.bodyContains(SpoonService.getParentExpression(varAcc)))
+                    .findFirst().get().getWorkFlow(varAcc);
+        }
+    }
+
     /**
      * Definit si la declaration de la variable est faite a la racine de ce block
-     * @param exp
+     * @param varAcc
      * @return
      */
-    public boolean includeDeclaration(CtExpression exp){
-        return workFlows.stream().anyMatch(p->  p.as(SpoonService.getVarAccess(exp)))
-                || (body.filterChildren(new TypeFilter<>(CtExpression.class)).
-                        list(CtVariable.class).contains(SpoonService.getVarAccess(exp).getVariable().getDeclaration()));
-
-
-                /*(SpoonService.getVarAccess(exp).getVariable().getDeclaration() != null ?
-                        SpoonService.getVarAccess(exp).getVariable().getDeclaration()
-                            .getParent().getPosition() == id
-                        : false);*/
+    public boolean includeDeclaration(CtVariableAccess varAcc){
+        return workFlows.stream().anyMatch(p->  p.as(varAcc))
+                || varAcc.getVariable().getDeclaration().getParent().getPosition() == id;
     }
 
     public void createWorkFlow(CtVariable var){
         this.workFlows.add(new VariableWorkFlow(this, var));
     }
-
-
-    public Boolean throwNPE() {
-        return null;
-    }
-
 }

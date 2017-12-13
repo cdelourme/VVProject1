@@ -41,7 +41,7 @@ public class AppTest {
     @Test
     public void cyclomaticProject() {
 
-        launcher.addProcessor(new MethodProcessor());
+        launcher.addProcessor(new CyclomaticProcessor());
         launcher.process();
         assertTrue(CyclomaticService.instance.getProjectCyclomatic().intValue() >= 8);
     }
