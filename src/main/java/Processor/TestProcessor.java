@@ -1,6 +1,7 @@
 package Processor;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+import services.fonctionnel.SpoonService;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtElement;
@@ -8,11 +9,48 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtParameter;
 import spoon.reflect.declaration.CtVariable;
 import spoon.reflect.visitor.filter.TypeFilter;
+import spoon.support.reflect.code.CtExpressionImpl;
 import spoon.support.reflect.code.CtIfImpl;
 import spoon.support.reflect.code.CtLoopImpl;
 
+import javax.swing.plaf.SplitPaneUI;
 
-public class TestProcessor extends AbstractProcessor<CtVariableAccess> {
+
+public class TestProcessor extends AbstractProcessor<CtVariableRead> {
+
+    @Override
+    public void process(CtVariableRead var) {
+        CtExpression exp = SpoonService.getParentExpression(var);
+        System.out.println(exp);
+        CtBinaryOperator bin = exp.filterChildren(new TypeFilter<>(CtBinaryOperator.class)).first();
+        if(bin != null){
+            System.out.println(bin.getLeftHandOperand());
+            System.out.println(bin.getKind());
+            System.out.println(bin.getRightHandOperand());
+        }
+        System.out.println();
+    }
+
+
+    /*@Override
+    public void process(CtVariableAccess var) {
+
+        CtExpression exp = SpoonService.getParentExpression(var);
+        System.out.println(exp);
+        System.out.println();
+        System.out.println();
+
+    }*/
+
+
+    /*@Override
+    public void process(CtVariableWrite var) {
+        CtExpression exp = SpoonService.getParentExpression(var);
+        System.out.println(exp);
+
+        System.out.println(exp.getElements(new TypeFilter(CtAssignment.class)));
+        System.out.println();
+    }*/
 
     /*@Override
     public void process(CtVariable test) {
@@ -36,7 +74,7 @@ public class TestProcessor extends AbstractProcessor<CtVariableAccess> {
         System.out.println();
     }*/
 
-    @Override
+    /*@Override
     public void process(CtVariableAccess test) {
         //System.out.println(test.getThenStatement().toString());
         System.out.println(test);
@@ -61,5 +99,7 @@ public class TestProcessor extends AbstractProcessor<CtVariableAccess> {
         }
 
         System.out.println();
-    }
+    }*/
+
+
 }

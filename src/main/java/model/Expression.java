@@ -1,10 +1,6 @@
 package model;
 
-import spoon.reflect.code.CtAssignment;
 import spoon.reflect.code.CtExpression;
-import spoon.reflect.visitor.filter.TypeFilter;
-
-import java.util.List;
 
 public class Expression {
 

@@ -13,4 +13,12 @@ public class DeclarationElement extends AVariableAccess {
         this.declaration = var;
         this.id = var.getPosition();
     }
+
+    public CtVariable getVariable() {
+        return declaration;
+    }
+
+    public Boolean throwNPE() {
+        return this.declaration.getDefaultExpression() == null;
+    }
 }

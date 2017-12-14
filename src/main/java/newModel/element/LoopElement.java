@@ -1,11 +1,12 @@
 package newModel.element;
 
-import model.Expression;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import newModel.VariableWorkFlow;
 import newModel.variableAccess.ExpressionElement;
 import services.fonctionnel.SpoonService;
 import spoon.reflect.code.*;
 import spoon.reflect.cu.SourcePosition;
+import spoon.reflect.declaration.CtVariable;
 
 public class LoopElement extends AElement {
 
@@ -26,7 +27,7 @@ public class LoopElement extends AElement {
         CtExpression exp = SpoonService.getParentExpression(varAcc);
 
         if (refCond != null && refCond.equals(exp)) {
-            this.condition = new ExpressionElement(this,exp);
+            this.condition = new ExpressionElement(this, exp, varAcc instanceof CtVariableWrite);
             workFlow.addExpression(condition);
         } else {
             if (body.bodyContains(exp)) {
@@ -56,4 +57,38 @@ public class LoopElement extends AElement {
         return body.getWorkFlow(varAcc);
     }
 
+
+    public Boolean throwNPE(CtVariable var){
+        // - si affectation(last) a nul -> possible NPE.
+        // - si affectation(last) (non nul) -> Recherche de l'affectation précédente.
+        if(body.throwNPE(var)){
+            return true;
+        }
+        else{
+            return null;
+        }
+    }
+
+    public Boolean throwNPE(CtExpression exp, VariableWorkFlow workFlow){
+        //recherche dans le boby
+            //true -> true
+            //false -> false
+            //null
+                //test de la condition -> var le non null
+                    //non -> null
+                    //oui -> false
+        if(condition!=null){
+            Boolean bodyThrow = body.throwNPE(exp,workFlow);
+            if(bodyThrow == null){
+                return (condition.testToNull(workFlow.getDeclaration().getVariable()))
+                        ? false : null;
+            }
+            else {
+                return bodyThrow;
+            }
+        }
+        else {
+            return body.throwNPE(exp,workFlow);
+        }
+    }
 }

@@ -3,11 +3,9 @@ package newModel.element;
 import newModel.VariableWorkFlow;
 import newModel.variableAccess.ExpressionElement;
 import services.fonctionnel.SpoonService;
-import spoon.reflect.code.CtBlock;
-import spoon.reflect.code.CtExpression;
-import spoon.reflect.code.CtIf;
-import spoon.reflect.code.CtVariableAccess;
+import spoon.reflect.code.*;
 import spoon.reflect.cu.SourcePosition;
+import spoon.reflect.declaration.CtVariable;
 
 public class IfElement extends AElement {
 
@@ -41,7 +39,7 @@ public class IfElement extends AElement {
         CtExpression exp = SpoonService.getParentExpression(varAcc);
 
         if(refCondition.equals(exp)){
-            condition = new ExpressionElement(this, exp);
+            condition = new ExpressionElement(this, exp, varAcc instanceof CtVariableWrite);
             workFlow.addExpression(condition);
         }
         else{
@@ -91,6 +89,62 @@ public class IfElement extends AElement {
             return ifBlock.getWorkFlow(varAcc);
         }else {
             return elseBlock.getWorkFlow(varAcc);
+        }
+    }
+
+
+    public Boolean throwNPE(CtVariable var) {
+        // - si (last) affectation (non nul) dans if AND else -> non NPE possible.
+        // - si (last) affectation dans if OU else -> recherche de l'affectation précédente.
+        // - si affectation a nul dans un des deux cas -> NPE possible.
+        if(elseBlock != null){
+            return ifBlock.throwNPE(var);
+        }
+        else{
+            if(ifBlock.throwNPE(var) || elseBlock.throwNPE(var)){
+                return true;
+            }
+            else {
+                if(!ifBlock.throwNPE(var) && !elseBlock.throwNPE(var)){
+                    return false;
+                }
+                else{
+                    return null;
+                }
+            }
+        }
+    }
+
+    public Boolean throwNPE(CtExpression exp, VariableWorkFlow workFlow){
+            //recherche dans block if/else
+                //true -> true
+                //false -> false
+                //null
+                    //test de la condition -> var le non null (inverse pour else)
+                    //non -> null
+                    //oui -> false
+        if(ifBlock.bodyContains(exp)){
+            Boolean bodyThrow = ifBlock.throwNPE(exp,workFlow);
+            if(bodyThrow == null){
+                return (condition.testToNull(workFlow.getDeclaration().getVariable()))
+                        ? false : null;
+            }
+            else {
+                return bodyThrow;
+            }
+        }
+        else {
+            if(elseBlock != null){
+                Boolean bodyThrow = elseBlock.throwNPE(exp,workFlow);
+                if(bodyThrow == null){
+                    return (!condition.testToNull(workFlow.getDeclaration().getVariable()))
+                            ? false : null;
+                }
+                else {
+                    return bodyThrow;
+                }
+            }
+            return null;
         }
     }
 }
