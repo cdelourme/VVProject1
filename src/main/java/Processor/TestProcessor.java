@@ -14,11 +14,25 @@ import spoon.support.reflect.code.CtIfImpl;
 import spoon.support.reflect.code.CtLoopImpl;
 
 import javax.swing.plaf.SplitPaneUI;
+import java.util.LinkedList;
+import java.util.List;
 
 
-public class TestProcessor extends AbstractProcessor<CtVariableRead> {
+public class TestProcessor extends AbstractProcessor<CtMethod> {
 
     @Override
+    public void process(CtMethod method) {
+        List<CtExpression> expS = method.filterChildren(new TypeFilter<>(CtExpression.class))
+                .list(CtExpression.class);
+
+        List<CtVariableAccess> varAccS = method.filterChildren(new TypeFilter<>(CtVariableAccess.class))
+                .list(CtVariableAccess.class);
+
+        System.out.println(varAccS.stream().allMatch(p->expS.contains(p)));
+    }
+
+
+    /*@Override
     public void process(CtVariableRead var) {
         CtExpression exp = SpoonService.getParentExpression(var);
         System.out.println(exp);
@@ -29,7 +43,7 @@ public class TestProcessor extends AbstractProcessor<CtVariableRead> {
             System.out.println(bin.getRightHandOperand());
         }
         System.out.println();
-    }
+    }*/
 
 
     /*@Override

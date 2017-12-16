@@ -1,14 +1,14 @@
 package newModel.variableAccess;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import newModel.element.AElement;
 import spoon.reflect.code.*;
+import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtVariable;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 import java.util.List;
 
-public class ExpressionElement extends AVariableAccess{
+public class ExpressionElement extends AVariableAccess {
 
     private CtExpression expression;
     public CtExpression getExp() {
@@ -23,7 +23,9 @@ public class ExpressionElement extends AVariableAccess{
         id = this.expression.getPosition();
     }
 
-
+    public CtElement getValue(){
+        return expression;
+    }
 
     public boolean contains(CtExpression exp) {
         return this.expression == exp;
@@ -36,7 +38,7 @@ public class ExpressionElement extends AVariableAccess{
      * false -> NPE impossible
      * @return
      */
-    public Boolean throwNPE() {
+    public Boolean throwNPE(CtVariable var) {
         CtAssignment assig = (CtAssignment)expression.getElements(new TypeFilter(CtAssignment.class)).get(0);
         if(assig != null){
             //return si la valeur d'assignement est null.

@@ -6,6 +6,7 @@ import newModel.element.BlockElement;
 import services.fonctionnel.SpoonService;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtVariableAccess;
+import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtVariable;
 
@@ -50,7 +51,7 @@ public class NPEService {
         }
     }
 
-    public VariableWorkFlow getVariableWorkFlow(String methodName, CtVariableAccess varAcc){
+    public VariableWorkFlow getVariableWorkFlow(String methodName, CtVariableRead varAcc){
         if(globalVars.stream().anyMatch(p->p.as(varAcc))){
             System.out.println("Variable de class non implémenté");
             return null;

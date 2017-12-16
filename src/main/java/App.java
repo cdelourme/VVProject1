@@ -24,8 +24,8 @@ public class App {
 
         //launcher.addProcessor(new CyclomaticProcessor());
         //launcher.addProcessor(new NpeMethodProcessor());
-        launcher.addProcessor(new TestProcessor());
-        //launcher.addProcessor(new NewNpeProcessor());
+        //launcher.addProcessor(new TestProcessor());
+        launcher.addProcessor(new NewNpeProcessor());
         launcher.process();
 
         /*CyclomaticService.instance.printResult();*/

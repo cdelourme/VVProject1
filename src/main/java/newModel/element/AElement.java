@@ -1,57 +1,32 @@
 package newModel.element;
 
-import newModel.VariableWorkFlow;
-import spoon.reflect.code.CtExpression;
-import spoon.reflect.code.CtVariableAccess;
-import spoon.reflect.code.CtVariableRead;
-import spoon.reflect.cu.SourcePosition;
-import spoon.reflect.declaration.CtVariable;
 
-public abstract class AElement {
+import newModel.AGeneralElement;
+import newModel.variableAccess.AVariableAccess;
 
-    private AElement parent;
-    protected SourcePosition id;
-
-    public SourcePosition getId(){
-        return id;
-    }
+public abstract class AElement extends AGeneralElement implements IElement {
 
     public AElement(AElement parent){
-        this.parent = parent;
+        super(parent);
     }
 
-    public boolean hasParent(CtExpression exp){
-        return exp.getParent().getPosition() == id;
+    public boolean isDirectParentOf(AGeneralElement expE){
+        return ((expE.getParent() != null ) ? expE.getParent().getId() == id : false);
     }
 
-    abstract void addExpression(VariableWorkFlow workflow, CtVariableAccess varAcc);
-    abstract void addExpression(CtVariableAccess varAcc);
-
-    abstract boolean bodyContains(CtExpression exp);
-
-    abstract VariableWorkFlow getWorkFlow(CtVariableAccess varAcc);
-
-    /**
-     * Definie si le block return ou non un NPE pour une variable
-     * True -> NPE possible
-     * False -> NPE impossible
-     * Null -> voir l'assignation précedante
-     * @param var
-     * @return
-     */
-    abstract Boolean throwNPE(CtVariable var);
-
-    /**
-     * Definie l'élement retourne une NPE pour une expression.
-     * l'expression dois appartenir au block
-     * True -> NPE possible
-     * False -> NPE impossible
-     * Null -> voir l'assignation précedante
-     * @param exp
-     * @param workFlow
-     * @return
-     */
-    abstract Boolean throwNPE(CtExpression exp, VariableWorkFlow workFlow);
-
-
+    public AElement getLastChildOf(AVariableAccess expE){
+        if(!isDirectParentOf(expE)){
+            AElement lastChild = expE.getParent();
+            while(!isDirectParentOf(lastChild)){
+                lastChild = lastChild.getParent();
+                if(lastChild== null){
+                    break;
+                }
+            }
+            return lastChild;
+        }
+        else {
+            return null;
+        }
+    }
 }

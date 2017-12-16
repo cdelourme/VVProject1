@@ -2,6 +2,7 @@ package newModel.variableAccess;
 
 import newModel.element.AElement;
 import spoon.reflect.cu.SourcePosition;
+import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtVariable;
 
 public class DeclarationElement extends AVariableAccess {
@@ -18,7 +19,11 @@ public class DeclarationElement extends AVariableAccess {
         return declaration;
     }
 
-    public Boolean throwNPE() {
-        return this.declaration.getDefaultExpression() == null;
+    public Boolean throwNPE(CtVariable var) {
+        return this.declaration.getDefaultExpression().toString().equalsIgnoreCase("null");
+    }
+
+    public CtElement getValue(){
+        return declaration;
     }
 }

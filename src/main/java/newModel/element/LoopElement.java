@@ -1,16 +1,14 @@
 package newModel.element;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import newModel.VariableWorkFlow;
 import newModel.variableAccess.ExpressionElement;
 import services.fonctionnel.SpoonService;
 import spoon.reflect.code.*;
-import spoon.reflect.cu.SourcePosition;
+import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtVariable;
 
 public class LoopElement extends AElement {
 
-    private SourcePosition id;
     private ExpressionElement condition;
     private BlockElement body;
     private CtExpression refCond = null;
@@ -48,8 +46,8 @@ public class LoopElement extends AElement {
         }
     }
 
-    public boolean bodyContains(CtExpression exp){
-        return refCond == exp || body.bodyContains(exp);
+    public boolean bodyContains(CtElement exp){
+        return ((refCond != null)? false : refCond == exp) || body.bodyContains(exp);
     }
 
 

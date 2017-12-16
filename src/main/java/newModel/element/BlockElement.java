@@ -1,10 +1,13 @@
 package newModel.element;
 
+import newModel.AGeneralElement;
 import newModel.VariableWorkFlow;
+import newModel.variableAccess.AVariableAccess;
 import newModel.variableAccess.ExpressionElement;
+import newService.ModelService;
 import services.fonctionnel.SpoonService;
 import spoon.reflect.code.*;
-import spoon.reflect.declaration.CtExecutable;
+import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtVariable;
 import spoon.reflect.visitor.filter.TypeFilter;
 
@@ -57,6 +60,19 @@ public class BlockElement extends AElement {
         }
     }
 
+    public boolean hasParent(CtExpression exp){
+        CtStatement parent = exp.getParent(new TypeFilter<>(CtStatement.class));
+        if(parent instanceof CtVariable){
+            parent = parent.getParent(new TypeFilter<>(CtStatement.class));
+        }
+        if(exp.getParent() instanceof CtReturn) {
+            return parent.getParent().getPosition() == id;
+        }
+        else {
+            return parent.getPosition() == id;
+        }
+    }
+
     /**
      * Ajout la variable si elle lui appartient sinon propage au enfant ou ne fait rien.
      * @param workFlow
@@ -65,8 +81,8 @@ public class BlockElement extends AElement {
     public void addExpression(VariableWorkFlow workFlow, CtVariableAccess varAcc){
         CtExpression exp = SpoonService.getParentExpression(varAcc);
         if(hasParent(exp)){
-            System.out.println(exp);
-            System.out.println(varAcc instanceof CtVariableWrite);
+            //System.out.println(exp);
+            //System.out.println(varAcc instanceof CtVariableWrite);
             workFlow.addExpression(new ExpressionElement(this,exp, varAcc instanceof CtVariableWrite));
         }
         else
@@ -76,9 +92,8 @@ public class BlockElement extends AElement {
 
     }
 
-    public boolean bodyContains(CtExpression exp){
-        //TODO a tester
-        return body.filterChildren(new TypeFilter<>(CtExpression.class)).list(CtExpression.class).contains(exp);
+    public boolean bodyContains(CtElement exp){
+        return body.filterChildren(new TypeFilter<>(CtElement.class)).list(CtElement.class).contains(exp);
     }
 
     /**
@@ -125,13 +140,13 @@ public class BlockElement extends AElement {
     }
 
     public Boolean throwNPE(CtVariable var){
-        LinkedList<CtVariableWrite> writeVars = (LinkedList<CtVariableWrite>)body
+        LinkedList<CtVariableWrite> writeVars = new LinkedList<CtVariableWrite>(body
                 .filterChildren(new TypeFilter<>(CtVariableWrite.class)).list(CtVariableWrite.class)
-                .stream().filter((CtVariableWrite p)-> p.getVariable().getDeclaration() == var.getPosition())
-                .collect(Collectors.toList());
+                .stream().filter((CtVariableWrite p)-> p.getVariable().getDeclaration().getPosition() == var.getPosition())
+                .collect(Collectors.toList()));
         //conversion en list d'expression
-        LinkedList<CtExpression> exps = (LinkedList<CtExpression>)writeVars.stream()
-                .map(p->SpoonService.getParentExpression(p)).collect(Collectors.toList());
+        LinkedList<CtExpression> exps = new LinkedList<CtExpression>(writeVars.stream()
+                .map(p->SpoonService.getParentExpression(p)).collect(Collectors.toList()));
         //parcour en sens inverse
         ListIterator<CtExpression> iterator = exps.listIterator(exps.size());
         //Parcour de la list a l'envers jusqu'a avoir une value stricte (true/false)
@@ -147,8 +162,82 @@ public class BlockElement extends AElement {
         return null;
     }
 
-    public Boolean throwNPE(CtExpression exp, VariableWorkFlow workFlow){
-        return workFlow.throwNPE(exp,this);
+
+    public Boolean throwNPE(CtExpression exp, VariableWorkFlow workFlow) {
+        CtVariable var = workFlow.getDeclaration().getVariable();
+        ExpressionElement expE = workFlow.getExp(exp);
+        if(expE == null){
+            return null;
+        }
+        LinkedList<AVariableAccess> previousExpEs = workFlow.getPreviousWriteExpS(expE);
+
+        if(previousExpEs.size()>0){
+            if(isDirectParentOf(expE)) {
+
+                previousExpEs = new LinkedList<>(previousExpEs.stream().filter(p->bodyContains(p.getValue()))
+                        .collect(Collectors.toList()));
+                if(previousExpEs.size()==0){
+                    return null;
+                }
+
+                LinkedList<AGeneralElement> previousElems = ModelService.instance
+                        .converToAGenE(previousExpEs, this);
+
+                //parcour des expression precédante
+                // par le biais des enfants
+                ListIterator<AGeneralElement> iterator = previousElems.listIterator(previousElems.size());
+
+                while (iterator.hasPrevious()) {
+                    AGeneralElement previousElem = iterator.previous();
+                    Boolean returnOfThrow = previousElem.throwNPE(var);
+                    if(returnOfThrow != null) {
+                        return returnOfThrow;
+                    }
+                }
+                return null;
+            }
+            else{
+                AElement lastchild = getLastChildOf(expE);
+                //test du child
+                if(lastchild == null){
+                    return null;
+                }
+                Boolean throwOfLastChild = lastchild.throwNPE(exp, workFlow);
+                if(throwOfLastChild != null){
+                    return throwOfLastChild;
+                }
+                else {
+                    previousExpEs = new LinkedList<AVariableAccess>(previousExpEs.stream().
+                            filter(p->bodyContains(p.getValue())).collect(Collectors.toList()));
+
+                    if(previousExpEs.size()>0){
+
+                        LinkedList<AGeneralElement> previousElems = ModelService.instance
+                                .converToAGenE(previousExpEs, this);
+
+                        //parcour des expression precédante
+                        // par le biais des enfants
+                        ListIterator<AGeneralElement> iterator = previousElems.listIterator(previousElems.size());
+
+                        while (iterator.hasPrevious()) {
+                            AGeneralElement previousElem = iterator.previous();
+                            Boolean returnOfThrow = previousElem.throwNPE(var);
+                            if(returnOfThrow != null) {
+                                return returnOfThrow;
+                            }
+                        }
+                        return null;
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
+        }
+        else {
+            return null;
+        }
+
     }
 
 }

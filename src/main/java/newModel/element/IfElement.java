@@ -5,11 +5,11 @@ import newModel.variableAccess.ExpressionElement;
 import services.fonctionnel.SpoonService;
 import spoon.reflect.code.*;
 import spoon.reflect.cu.SourcePosition;
+import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtVariable;
 
 public class IfElement extends AElement {
 
-    private SourcePosition id;
     private ExpressionElement condition;
     private BlockElement ifBlock;
     private BlockElement elseBlock;
@@ -29,12 +29,6 @@ public class IfElement extends AElement {
         }
     }
 
-
-    @Override
-    public SourcePosition getId() {
-        return id;
-    }
-
     public void addExpression(VariableWorkFlow workFlow, CtVariableAccess varAcc) {
         CtExpression exp = SpoonService.getParentExpression(varAcc);
 
@@ -48,7 +42,7 @@ public class IfElement extends AElement {
             }
             else {
                 if(elseBlock.bodyContains(exp)){
-                    elseBlock.addExpression(varAcc);
+                    elseBlock.addExpression(workFlow, varAcc);
                 }
                 else{
                     System.out.println("an error occurre : IfElement - addExp");
@@ -78,7 +72,7 @@ public class IfElement extends AElement {
         }
     }
 
-    public boolean bodyContains(CtExpression exp){
+    public boolean bodyContains(CtElement exp){
         return refCondition == exp ||
                 (ifBlock != null ? ifBlock.bodyContains(exp) : false) ||
                 (elseBlock != null ? elseBlock.bodyContains(exp) : false);
@@ -97,8 +91,9 @@ public class IfElement extends AElement {
         // - si (last) affectation (non nul) dans if AND else -> non NPE possible.
         // - si (last) affectation dans if OU else -> recherche de l'affectation précédente.
         // - si affectation a nul dans un des deux cas -> NPE possible.
-        if(elseBlock != null){
-            return ifBlock.throwNPE(var);
+        if(elseBlock == null){
+            return null;
+            //return ifBlock.throwNPE(var);
         }
         else{
             if(ifBlock.throwNPE(var) || elseBlock.throwNPE(var)){
@@ -126,8 +121,8 @@ public class IfElement extends AElement {
         if(ifBlock.bodyContains(exp)){
             Boolean bodyThrow = ifBlock.throwNPE(exp,workFlow);
             if(bodyThrow == null){
-                return (condition.testToNull(workFlow.getDeclaration().getVariable()))
-                        ? false : null;
+                return (condition.testToNull(workFlow.getDeclaration().getVariable()) != null
+                        ? false : null);
             }
             else {
                 return bodyThrow;
@@ -137,8 +132,8 @@ public class IfElement extends AElement {
             if(elseBlock != null){
                 Boolean bodyThrow = elseBlock.throwNPE(exp,workFlow);
                 if(bodyThrow == null){
-                    return (!condition.testToNull(workFlow.getDeclaration().getVariable()))
-                            ? false : null;
+                    return (condition.testToNull(workFlow.getDeclaration().getVariable()) != null
+                            ? true : null);
                 }
                 else {
                     return bodyThrow;

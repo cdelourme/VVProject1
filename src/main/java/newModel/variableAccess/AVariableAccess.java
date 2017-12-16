@@ -1,25 +1,13 @@
 package newModel.variableAccess;
 
+import newModel.AGeneralElement;
 import newModel.element.AElement;
 import spoon.reflect.cu.SourcePosition;
 
-public abstract class AVariableAccess {
-
-    protected SourcePosition id;
-    public SourcePosition getId() {
-        return id;
-    }
-
-    protected AElement parent;
-
-    public AElement getParent() {
-        return parent;
-    }
+public abstract class AVariableAccess extends AGeneralElement implements IVariableAccess{
 
     public AVariableAccess(AElement parent){
-        this.parent = parent;
+        super(parent);
     }
-
-    abstract Boolean throwNPE();
 
 }
