@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import services.report.CyclomaticRapportService;
 import spoon.Launcher;
 import services.fonctionnel.CyclomaticService;
 
@@ -28,13 +29,8 @@ public class AppTest {
 
         inDir = new File("./input/src");
 
-        //URL url = new URL("http://github.com/OPCFoundation/UA-Java/src/main/java/org/opcfoundation/ua/utils/");
-        //Scanner s = new Scanner(url.openStream());
-        //File inDir = new File("http://github.com/OPCFoundation/UA-Java/src/main/java/org/opcfoundation/ua/utils/");
-
         launcher.addInputResource(inDir.getPath());
         launcher.buildModel();
-        //CtModel root = launcher.getModel();
     }
 
 
@@ -43,41 +39,31 @@ public class AppTest {
 
         launcher.addProcessor(new CyclomaticProcessor());
         launcher.process();
-        assertTrue(CyclomaticService.instance.getProjectCyclomatic().intValue() >= 8);
+        assertTrue(CyclomaticService.instance.getProjectCyclomatic().intValue() >= 1);
     }
 
-    //@Ignore
-    @Test
-    public void testForLoop() {
-        Integer[] myNumbers = null;
-        for (Integer myNumber : myNumbers) {
-            System.out.println(myNumber);
-        }
-    }
-
-    @Ignore
     @Test
     public void cyclomaticClass() {
 
-        //launcher.addProcessor(new ClassProcessor());
+        launcher.addProcessor(new CyclomaticProcessor());
         launcher.process();
         assertTrue(CyclomaticService.instance.getClassCyclomatics() != null);
     }
 
     @Test
-    public void fileReportExists(){
+    public void fileReportExistsCyclomaticTxt() throws Exception{
 
-        CyclomaticService.instance.printResult();
+        new CyclomaticRapportService().cyclomaticRapport(CyclomaticService.instance);
         File f = new File("CyclomaticReport.txt");
         assertTrue(f.exists());
     }
 
+    @Test
+    public void fileReportExistsCyclomaticHtml() throws Exception{
 
-    @After
-    public void end(){
-
-        CyclomaticService.instance.printResult();
-        File f = new File("CyclomaticReport.txt");
+        new CyclomaticRapportService().cyclomaticRapportHTML(CyclomaticService.instance);
+        File f = new File("CyclomaticReport.html");
         assertTrue(f.exists());
     }
+
 }
