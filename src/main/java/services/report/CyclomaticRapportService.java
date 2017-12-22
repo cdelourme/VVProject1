@@ -54,7 +54,7 @@ public class CyclomaticRapportService {
             writer.println("\t"+key+" : "+value + " <br>");
         });
         writer.println("<br>");
-        writer.println("Cyclomatic des methodes : ");
+        writer.println("Cyclomatic des methodes : " + " <br>");
         tmc = new TreeMap(cycloServ.getMethodCyclomatics());
         tmc.forEach((key,value)->{
             writer.println("\t"+key+" : "+value + " <br>");
