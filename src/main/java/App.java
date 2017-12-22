@@ -14,23 +14,22 @@ public class App {
         launcher.getEnvironment().setAutoImports(true);
         launcher.getEnvironment().setNoClasspath(true);
 
-        ///home/bob/IdeaProjects/VVproject1/input/src
-        //File inDir = new File("/Documents/Source/IdeaProject/VVProject/input/src");
-        File inDir = new File("/home/bob/Documents/Source/IdeaProject/VVProject/input/src");
+        File inDir = new File("./input/src");
 
         launcher.addInputResource(inDir.getPath());
         launcher.buildModel();
         CtModel root = launcher.getModel();
 
-        //launcher.addProcessor(new CyclomaticProcessor());
+        launcher.addProcessor(new CyclomaticProcessor());
         //launcher.addProcessor(new NpeMethodProcessor());
         //launcher.addProcessor(new TestProcessor());
-        launcher.addProcessor(new NewNpeProcessor());
+        //launcher.addProcessor(new NewNpeProcessor());
         launcher.process();
 
         /*CyclomaticService.instance.printResult();*/
         try{
             new CyclomaticRapportService().cyclomaticRapport(CyclomaticService.instance);
+            new CyclomaticRapportService().cyclomaticRapportHTML(CyclomaticService.instance);
 
         }catch (Exception ex){
 

@@ -5,7 +5,9 @@ import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtLoop;
 import spoon.reflect.code.CtSwitch;
 import spoon.reflect.declaration.CtClass;
+import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.declaration.CtParameter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import services.fonctionnel.CyclomaticService;
 
@@ -27,6 +29,10 @@ public class CyclomaticProcessor extends AbstractProcessor<CtMethod> {
 
         CyclomaticService.instance.setMethodCyclomatics(className,name,ifElements.size()+switchElements.size()+loopElements.size());
 
+//        List<CtElement> list = ctMethod.getElements(new TypeFilter<>(CtElement.class));
+//        for(CtElement p : list){
+//            System.out.println( " Fonction : " + name + " : " + p.getClass().getSimpleName() + " : " + p.toString() );
+//        }
     }
 
 }

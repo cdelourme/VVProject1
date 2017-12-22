@@ -1,6 +1,6 @@
 package newService;
 
-import com.sun.deploy.util.BlackList;
+//import com.sun.deploy.util.BlackList;
 import newModel.VariableWorkFlow;
 import newModel.element.BlockElement;
 import services.fonctionnel.SpoonService;
